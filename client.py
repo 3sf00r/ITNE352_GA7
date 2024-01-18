@@ -23,12 +23,9 @@ Table = PrettyTable(["Client_name"])
 #Enter the client name
 Client_name = input("Enter your name: ")
 #Send the client name to the server
-Client_name = Client_name.encode('ascii')
+Client_name = Client_name.encode('utf-8')
 client_socket.sendall(Client_name)
 
-l_client = client_socket.recv().decode()
-print("\n Hi ",Client_name)
-print("\n")
 
 #fnn to decoding and printing the data
 def Display_data(data):
@@ -39,14 +36,14 @@ def Display_data(data):
 while True:
 
     try:
-	    print("\n Choose one option:")
+        print("\n Choose one option:")
         print("1.Display arrived flights")
         print("2.Display delayed flights")
         print("3.Display flights from one specific city")
         print("4.Display details from one particular flight")
         print("5.Quit")
-        option = int(input("Enter your selection: "))
-        
+        option = input("Enter your selection: ")
+    
 	#Display all arrived flights
         if option == "1":
             client_socket.sendall(option.encode('utf-8'))
@@ -89,3 +86,6 @@ while True:
     except:
         print("Error connecting to server")
         break
+    
+        
+	    
