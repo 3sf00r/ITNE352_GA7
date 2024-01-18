@@ -56,7 +56,7 @@ def HMainFunc(conn, address):
 
 
         option = conn.recv(1024).decode('utf-8')
-        if not option or option.lower().replace(" ", "") == 'e' or attempts > 10:
+        if not option or option.lower().replace(" ", "") == 'e':
             print(f"The Client {client_name} has disconnected.")
 
         counter = 0
@@ -80,7 +80,6 @@ def HMainFunc(conn, address):
                     arrivalGate = flight['arrival']['gate']
 
                     optionA_table = [['IATA', 'Departure Airport', 'arrival Time', 'arrivalTerminal', 'arrivalGate'], [IATA, departureAirport, arrivalTime,arrivalTerminal, arrivalGate]]
-                    conn.sendall(optionA_table.encode('utf-8'))
                     subMessage = f'''
                     Flight Number#{counter}:
 
@@ -89,62 +88,58 @@ def HMainFunc(conn, address):
                      \n
                     '''
 
-                data += (subMessage)
+                    data += (subMessage)
+            conn.sendall(data.encode('utf-8'))
 
-            if (data == ""):
-                data = "No data"
-                conn.sendall(data.encode('utf-8'))
+            #if (data == ""):
+                #data = "No data"
+                #conn.sendall(data.encode('utf-8'))
+            #else:
+                #conn.sendall(data.encode('utf-8'))
 
-            else:
-                conn.sendall(data.encode('utf-8'))
-
-                options = """options:
-                1. Download data as .txt file.
-                2. have data sent by email.
-                """
-                conn.sendall(options.encode('utf-8'))
-                printOption = conn.recv(1048).decode('utf-8') 
-                if printOption.lower().replace(" ", "") == "1":
-                    down_txt(client_name, option, optionCounter, data)  
-                elif printOption.lower().replace(" ", "") == "2":
-                    C_email=""
-                    SendEmail(client_name, C_email, data)  
+                #options = "options: 1. Download data as .txt file. 2. have data sent by email."
+                #conn.sendall(options.encode('utf-8'))
+                #printOption = conn.recv(1048).decode('utf-8') 
+                #if printOption.lower().replace(" ", "") == "1":
+                #    down_txt(client_name, option, optionCounter, data)  
+                #elif printOption.lower().replace(" ", "") == "2":
+                #    C_email=""
+                #    SendEmail(client_name, C_email, data)  
 
 
 
 
         elif option.lower().replace(" ", "") == 'b':
-
-            counter = 0
+            optionCounter += 1
             for flight in obj['data']:
                 subMessage = ""
                 if flight['arrival']['delay'] is not None:
-                    counter += 1
-                    IATA = flight['arrival']['iata']
-                    departureAirport = flight['departure']['airport']
-                    departureTime = flight['departure']['estimated']
-                    estimatedArrivalTime = flight['arrival']['estimated']
-                    arrivalTerminal = flight['arrival']['terminal']
-                    delay = flight['arrival']['delay']
-                    arrivalGate = flight['arrival']['gate']
+                   counter += 1
+                   IATA = flight['arrival']['iata']
+                   departureAirport = flight['departure']['airport']
+                   departureTime = flight['departure']['estimated']
+                   estimatedArrivalTime = flight['arrival']['estimated']
+                   arrivalTerminal = flight['arrival']['terminal']
+                   delay = flight['arrival']['delay']
+                   arrivalGate = flight['arrival']['gate']
 
-                    optionB_table = [['IATA', 'Departure Airport', 'Departure Time'
-                                         , 'Estimated Arrival Time', 'Arrival Terminal', 'Delay',
-                                      'Arrival Gate']
-                        , [IATA, departureAirport, departureTime,
-                           estimatedArrivalTime, arrivalTerminal, delay, arrivalGate]]
+                   optionB_table = [['IATA', 'Departure Airport', 'Departure Time'
+                                        , 'Estimated Arrival Time', 'Arrival Terminal', 'Delay','Arrival Gate']
+                       , [IATA, departureAirport, departureTime,
+                          estimatedArrivalTime, arrivalTerminal, delay, arrivalGate]]
 
-                    conn.sendall(optionB_table.encode('utf-8'))
-                    subMessage =  f'''Flight Number#{counter}:
+                    
+                   subMessage =  f'''Flight Number#{counter}:
 {optionB_table}
 
-                                                      \n
-                                                     '''
-                    data += subMessage
-  
+\\n
+'''
+                   data += subMessage
+            conn.sendall(data.encode('utf-8'))
+                    
         elif option.lower().replace(" ", "") == 'c':
             optionCounter += 1
-            RIcao = conn.recv(10240)
+            RIcao = conn.recv(1024)
             RIcao = RIcao.decode('utf-8')
             RIcao = RIcao.upper().replace(" ", "")
             for flight in obj['data']:
@@ -161,7 +156,6 @@ def HMainFunc(conn, address):
                                          , 'Estimated Arrival Time', ' Gate', 'Arrival Gate', 'Status']
                         , [IATA, departureAirport, departureTime, estimatedArrivalTime,
                            departureGate, arrivalGate, status]]
-                    conn.sendall(optionC_table.encode('utf-8'))
                     subMessage = f'''
                                          Flight Number#{counter}:
 
@@ -170,7 +164,8 @@ def HMainFunc(conn, address):
                                                       \n
                                                      '''
 
-
+                    data += subMessage
+            conn.sendall(data.encode('utf-8'))
 
 
         elif option.lower().replace(" ", "") == 'd':
@@ -201,25 +196,23 @@ def HMainFunc(conn, address):
                            arrivalAirport, arrivalGate, arrivalTerminal, status, scheduledDeparture,
                            scheduledArrival]]
                     
-                    conn.sendall(optionD_table.encode('utf-8'))
+                
                     subMessage = f'''
                                          Flight Number#{counter}:
 {optionD_table}
                                                       \n
                                                      '''
-
-                    data +=   subMessage
-
+                    data += subMessage
             if (data == ""):
                 data = "no data"
                 conn.sendall(data.encode('utf-8'))
             else:
-                print("Invalid option!")
-                attempts += 1
-
+                conn.sendall(data.encode('utf-8'))
+                
+            
     except ConnectionResetError:
         print(f" client {client_name} has disconnected")
-
+        
     finally:
         conn.close()
 
