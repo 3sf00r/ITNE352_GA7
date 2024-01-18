@@ -44,39 +44,48 @@ while True:
         print("5.Quit")
         option = input("Enter your selection: ")
     
-	#Display all arrived flights
+	#Display arrived flights
         if option == "1":
-            client_socket.sendall(option.encode('utf-8'))
+            opt="a"
+            client_socket.sendall(opt.encode('utf-8'))
             data = client_socket.recv()
             Display_data(data)
 	
-	#Display all delayed flights
+	#Display delayed flights
         elif option == "2":
-            client_socket.sendall(option.encode('utf-8'))
+            opt="b"
+            client_socket.sendall(opt.encode('utf-8'))
             data = client_socket.recv()
             Display_data(data)
+            opt2=input()
+            client_socket.sendall(opt2.encode('utf-8'))
+            data2 = client_socket.recv()
+            Display_data(data2)
 	
-	#Display all flights from a specific city
+	#Display flights from one Specific City
         elif option == "3":
-            client_socket.sendall(option.encode('utf-8'))
+            opt="c"
+            client_socket.sendall(opt.encode('utf-8'))
             city = input("Enter city code: ")
             client_socket.sendall(city.encode('utf-8'))
             data = client_socket.recv()
             Display_data(data)
 
-	#Display details of a particular flight
+	#Display details of one specific flight
         elif option == "4":
-            client_socket.sendall(option.encode('utf-8'))
-            flight = input("Enter flight number")
+            opt="d"
+            client_socket.sendall(opt.encode('utf-8'))
+            flight = input("enter flight IATA:")
             client_socket.sendall(flight.encode('utf-8'))
             data = client_socket.recv()
             Display_data(data)
 	
 	#Closing the connection
         elif option == "5":
-            client_socket.sendall(option.encode('utf-8'))
-            print("Connection has been closed")
-            print("Good Bye")
+            opt="e"
+            client_socket.sendall(opt.encode('utf-8'))
+            print("Connection with server is closed")
+            print("see ya!")
             client_socket.close()
             break
    
@@ -84,7 +93,7 @@ while True:
             print("Invalid option")
             
     except:
-        print("Error connecting to server")
+        print("Error establishing connection")
         break
     
         
