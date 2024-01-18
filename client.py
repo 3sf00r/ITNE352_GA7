@@ -48,18 +48,18 @@ while True:
         if option == "1":
             opt="a"
             client_socket.sendall(opt.encode('utf-8'))
-            data = client_socket.recv()
+            data = client_socket.recv(20480)
             Display_data(data)
 	
 	#Display delayed flights
         elif option == "2":
             opt="b"
             client_socket.sendall(opt.encode('utf-8'))
-            data = client_socket.recv()
+            data = client_socket.recv(2048)
             Display_data(data)
             opt2=input()
             client_socket.sendall(opt2.encode('utf-8'))
-            data2 = client_socket.recv()
+            data2 = client_socket.recv(2048)
             Display_data(data2)
 	
 	#Display flights from one Specific City
@@ -68,7 +68,7 @@ while True:
             client_socket.sendall(opt.encode('utf-8'))
             city = input("Enter city code: ")
             client_socket.sendall(city.encode('utf-8'))
-            data = client_socket.recv()
+            data = client_socket.recv(2048)
             Display_data(data)
 
 	#Display details of one specific flight
@@ -77,7 +77,7 @@ while True:
             client_socket.sendall(opt.encode('utf-8'))
             flight = input("enter flight IATA:")
             client_socket.sendall(flight.encode('utf-8'))
-            data = client_socket.recv()
+            data = client_socket.recv(2048)
             Display_data(data)
 	
 	#Closing the connection
