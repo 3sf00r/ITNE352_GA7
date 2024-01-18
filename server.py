@@ -2,6 +2,10 @@
 #Done by: Ali Mohammed Alasfoor, 202100850
 
 import socket
+import json
+import requests
+import threading
+import re
 
 Server_Side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 Server_Side.bind(("127.0.0.1", 7779))
@@ -37,7 +41,7 @@ def myfun(conn, address):
     attempts = 0
     try:
         print("accepting Cennection From {0}".format(address))
-        rmsg = conn.recv(2048).decode('ascii')
+        rmsg = conn.recv(2048).decode('utf-8')
         rmsg = re.split('-', rmsg)
         client_name = rmsg[0]
         print(client_name, "is connected to the server")
